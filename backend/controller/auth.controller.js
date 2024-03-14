@@ -25,8 +25,8 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10); //higher the better but slower
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    //random profile picture : https://avatar.iran.liara.run/public/boy/?username=thompson && https://avatar.iran.liara.run/public/girl/?username=thompson
-    const boyProfilePic = `https://api.dicebear.com/7.x/adventurer/svg?seed=${username}`;
+    //random profile picture : 
+    const boyProfilePic = `https://avatar.iran.liara.run/public/boy/?username=̥${username}`;
     const girlProfilePic = `https://avatar.iran.liara.run/public/girl/?username=̥${username}`;
     const newUser = new User({
       fullname,
