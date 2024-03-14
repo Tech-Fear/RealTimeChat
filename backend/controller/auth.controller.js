@@ -6,19 +6,20 @@ import generateTokenAndSetCookie from "../utils/genreateToken.js";
 
 export const signup = async (req, res) => {
   try {
-    const { fullname, username, email, password, cf_password, gender } =
+    const { fullname, username, password, confirmPassword, gender } =
       req.body;
-    if (!fullname || !username || !password || !cf_password) {
-      return res.status(400).json({ msg: "Please fill in all fields" });
+    // console.log(fullname,username,password,confirmPassword,gender)
+    if (!fullname || !username || !password || !confirmPassword ||! gender) {
+      return res.status(400).json({ error: "Please fill in all fields" });
     }
-    if (password !== cf_password) {
-      return res.status(400).json({ msg: "Password's do not match" });
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: "Password's do not match" });
     }
     const user = await User.findOne({ username });
     if (user) {
       return res
         .status(400)
-        .json({ msg: "User With same Username already exists" });
+        .json({ error: "Username already taken" });
     }
     //Hash password here
     const salt = await bcrypt.genSalt(10); //higher the better but slower
@@ -43,6 +44,7 @@ export const signup = async (req, res) => {
         userName: newUser.username,
         profilePic: newUser.profile,
       });
+
     } else {
       res.status(400).json({ error: "Invalid User Data" });
     }
@@ -55,7 +57,7 @@ export const login = async(req, res) => {
   try {
     const {username,password}=req.body
     const user=await User.findOne({username})
-    const isPassword=await bcrypt.compare(password,user.password || "") 
+    const isPassword=await bcrypt.compare(password,user?.password || "")
     if(!user || !isPassword){
       return res.status(400).json({error:"Invalid Credentials"})
     }
